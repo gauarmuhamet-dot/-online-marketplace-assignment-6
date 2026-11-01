@@ -1,0 +1,17 @@
+
+package com.marketplace.visitor;
+
+public interface CatalogVisitor<R> {
+
+    R visit(Catalog catalog);
+
+    R visit(Category category);
+
+    R visit(PhysicalProduct product);
+
+    R visit(DigitalProduct product);
+
+    R visit(ServiceProduct product);
+
+    R visit(SubscriptionProduct product);
+}
