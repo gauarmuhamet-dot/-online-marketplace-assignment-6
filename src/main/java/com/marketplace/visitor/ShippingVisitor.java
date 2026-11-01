@@ -57,4 +57,8 @@ public final class ShippingVisitor implements CatalogVisitor<BigDecimal> {
     public BigDecimal visit(SubscriptionProduct product) {
         return BigDecimal.ZERO;
     }
+    @Override
+    public BigDecimal visit(GiftCardProduct product) {
+        return BigDecimal.ZERO;
+    }
 }

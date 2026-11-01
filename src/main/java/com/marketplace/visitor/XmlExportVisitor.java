@@ -71,6 +71,14 @@ public final class XmlExportVisitor implements CatalogVisitor<String> {
                 + "\"/>\n";
     }
 
+    @Override
+    public String visit(GiftCardProduct product) {
+        return "<giftCardProduct id=\"" + escape(product.getId())
+                + "\" name=\"" + escape(product.getName())
+                + "\" price=\"" + product.getPrice()
+                + "\"/>\n";
+    }
+
     private String escape(String value) {
         return value.replace("&", "&amp;")
                 .replace("<", "&lt;")
@@ -81,6 +89,7 @@ public final class XmlExportVisitor implements CatalogVisitor<String> {
 
     private String indent(String text, int level) {
         String spaces = "    ".repeat(level);
+
         return text.lines()
                 .map(line -> spaces + line + "\n")
                 .collect(java.util.stream.Collectors.joining());

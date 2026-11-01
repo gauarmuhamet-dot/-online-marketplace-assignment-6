@@ -15,7 +15,7 @@ public final class ProductNameVisitor
             names.addAll(category.accept(this));
         }
 
-        return names;
+        return List.copyOf(names);
     }
 
     @Override
@@ -26,7 +26,7 @@ public final class ProductNameVisitor
             names.addAll(element.accept(this));
         }
 
-        return names;
+        return List.copyOf(names);
     }
 
     @Override
@@ -46,6 +46,11 @@ public final class ProductNameVisitor
 
     @Override
     public List<String> visit(SubscriptionProduct product) {
+        return List.of(product.getName());
+    }
+
+    @Override
+    public List<String> visit(GiftCardProduct product) {
         return List.of(product.getName());
     }
 }

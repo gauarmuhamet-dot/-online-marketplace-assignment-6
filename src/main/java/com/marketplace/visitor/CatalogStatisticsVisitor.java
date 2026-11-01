@@ -10,6 +10,7 @@ public final class CatalogStatisticsVisitor
     private int digitalCount;
     private int serviceCount;
     private int subscriptionCount;
+    private int giftCardCount;
 
     private BigDecimal totalValue = BigDecimal.ZERO;
 
@@ -57,6 +58,13 @@ public final class CatalogStatisticsVisitor
         return null;
     }
 
+    @Override
+    public Void visit(GiftCardProduct product) {
+        giftCardCount++;
+        totalValue = totalValue.add(product.getPrice());
+        return null;
+    }
+
     public int getPhysicalCount() {
         return physicalCount;
     }
@@ -73,9 +81,16 @@ public final class CatalogStatisticsVisitor
         return subscriptionCount;
     }
 
+    public int getGiftCardCount() {
+        return giftCardCount;
+    }
+
     public int getTotalProductCount() {
-        return physicalCount + digitalCount
-                + serviceCount + subscriptionCount;
+        return physicalCount
+                + digitalCount
+                + serviceCount
+                + subscriptionCount
+                + giftCardCount;
     }
 
     public BigDecimal getTotalValue() {
@@ -87,6 +102,7 @@ public final class CatalogStatisticsVisitor
         digitalCount = 0;
         serviceCount = 0;
         subscriptionCount = 0;
+        giftCardCount = 0;
         totalValue = BigDecimal.ZERO;
     }
 }

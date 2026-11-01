@@ -45,6 +45,13 @@ public class Main {
                 12
         );
 
+        // NEW ELEMENT: GiftCardProduct
+        GiftCardProduct giftCard = new GiftCardProduct(
+                "G001",
+                "Gift Card",
+                new BigDecimal("10000")
+        );
+
         Category electronics = new Category(
                 "Electronics",
                 List.of(laptop, ebook)
@@ -55,9 +62,14 @@ public class Main {
                 List.of(repair, premium)
         );
 
+        Category gifts = new Category(
+                "Gifts",
+                List.of(giftCard)
+        );
+
         Catalog catalog = new Catalog(
                 "Online Marketplace",
-                List.of(electronics, services)
+                List.of(electronics, services, gifts)
         );
 
         // PART 2: OBSERVER PATTERN
@@ -82,7 +94,8 @@ public class Main {
                                 "P001", electronics,
                                 "D001", electronics,
                                 "S001", services,
-                                "SUB001", services
+                                "SUB001", services,
+                                "G001", gifts
                         )
                 );
 
@@ -108,7 +121,6 @@ public class Main {
             System.out.println("Category value: " + event.getPrice());
             System.out.println("Products inspected: " + event.getStock());
         });
-
 
         priceSource.updatePrice(
                 "P001", new BigDecimal("10000")
@@ -174,6 +186,9 @@ public class Main {
 
         System.out.println("Total products: "
                 + statisticsVisitor.getTotalProductCount());
+
+        System.out.println("Gift cards: "
+                + statisticsVisitor.getGiftCardCount());
 
         System.out.println("Total catalog value: "
                 + statisticsVisitor.getTotalValue());

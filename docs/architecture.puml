@@ -1,0 +1,97 @@
+
+@startuml
+title Online Marketplace - Observer and Visitor Patterns
+
+skinparam classAttributeIconSize 0
+left to right direction
+
+package "Observer Pattern" {
+    interface "Observer<T>" as Obs {
+        +onEvent(event: T): void
+    }
+
+    interface "Subject<T>" as Sub {
+        +subscribe(eventType, observer): void
+        +unsubscribe(eventType, observer): void
+        +notifyObservers(eventType, event): void
+    }
+
+    class "EventPublisher<T>" as Pub
+    class PriceSource
+    class StockSource
+    class MarketplaceEvent
+
+    class WishlistNotifier
+    class PriceDropAlert
+    class AnalyticsListener
+    class CacheListener
+    class StockAlertListener
+
+    Sub <|.. Pub
+    Pub <|-- PriceSource
+    Pub <|-- StockSource
+
+    Obs <|.. WishlistNotifier
+    Obs <|.. PriceDropAlert
+    Obs <|.. AnalyticsListener
+    Obs <|.. CacheListener
+    Obs <|.. StockAlertListener
+
+    Pub ..> Obs : notifies
+    Pub ..> MarketplaceEvent : publishes
+}
+
+package "Visitor Pattern" {
+    interface CatalogElement {
+        +accept(visitor)
+    }
+
+    interface "CatalogVisitor<R>" as CV {
+        +visit(Catalog)
+        +visit(Category)
+        +visit(PhysicalProduct)
+        +visit(DigitalProduct)
+        +visit(ServiceProduct)
+        +visit(SubscriptionProduct)
+    }
+
+    class Catalog
+    class Category
+    class PhysicalProduct
+    class DigitalProduct
+    class ServiceProduct
+    class SubscriptionProduct
+
+    class TaxVisitor
+    class ShippingVisitor
+    class CatalogStatisticsVisitor
+    class ProductFilterVisitor
+    class XmlExportVisitor
+
+    CatalogElement <|.. Catalog
+    CatalogElement <|.. Category
+    CatalogElement <|.. PhysicalProduct
+    CatalogElement <|.. DigitalProduct
+    CatalogElement <|.. ServiceProduct
+    CatalogElement <|.. SubscriptionProduct
+
+    Catalog *-- Category
+    Category o-- CatalogElement
+
+    CV <|.. TaxVisitor
+    CV <|.. ShippingVisitor
+    CV <|.. CatalogStatisticsVisitor
+    CV <|.. ProductFilterVisitor
+    CV <|.. XmlExportVisitor
+
+    CatalogElement ..> CV : accept / double dispatch
+}
+
+class CatalogInspectionListener
+
+Obs <|.. CatalogInspectionListener
+Pub <|-- CatalogInspectionListener
+CatalogInspectionListener --> Category : selects subtree
+CatalogInspectionListener --> CatalogStatisticsVisitor : runs
+
+@enduml

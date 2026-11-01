@@ -65,6 +65,11 @@ public final class ProductFilterVisitor
         return filter(product, product.getPrice());
     }
 
+    @Override
+    public List<CatalogElement> visit(GiftCardProduct product) {
+        return filter(product, product.getPrice());
+    }
+
     private List<CatalogElement> filter(
             CatalogElement product,
             BigDecimal price

@@ -64,4 +64,10 @@ public final class TaxVisitor implements CatalogVisitor<BigDecimal> {
         return price.multiply(rate)
                 .setScale(2, RoundingMode.HALF_UP);
     }
+
+    @Override
+    public BigDecimal visit(GiftCardProduct product) {
+        return BigDecimal.ZERO;
+    }
+
 }

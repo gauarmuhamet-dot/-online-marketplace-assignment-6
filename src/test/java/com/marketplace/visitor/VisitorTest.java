@@ -45,6 +45,21 @@ public class VisitorTest {
         );
     }
 
+    private Catalog createCatalogWithGiftCard() {
+        GiftCardProduct giftCard = new GiftCardProduct(
+                "G001", "Gift Card",
+                new BigDecimal("10000")
+        );
+
+        Category gifts = new Category(
+                "Gifts", List.of(giftCard)
+        );
+
+        return new Catalog(
+                "Gift Marketplace", List.of(gifts)
+        );
+    }
+
     @Test
     void taxCalculationIsCorrect() {
         BigDecimal result = createCatalog().accept(
@@ -155,5 +170,58 @@ public class VisitorTest {
                 new BigDecimal("2000")
                         .compareTo(visitor.getTotalValue())
         );
+    }
+
+    // NEW TEST 1: Gift card statistics
+
+    @Test
+    void giftCardIsCountedInStatistics() {
+        CatalogStatisticsVisitor visitor =
+                new CatalogStatisticsVisitor();
+
+        createCatalogWithGiftCard().accept(visitor);
+
+        assertEquals(1, visitor.getGiftCardCount());
+        assertEquals(1, visitor.getTotalProductCount());
+
+        assertEquals(
+                0,
+                new BigDecimal("10000")
+                        .compareTo(visitor.getTotalValue())
+        );
+    }
+
+    // NEW TEST 2: Gift card XML export
+
+    @Test
+    void giftCardIsExportedToXml() {
+        String xml = createCatalogWithGiftCard().accept(
+                new XmlExportVisitor()
+        );
+
+        assertTrue(xml.contains("<giftCardProduct"));
+        assertTrue(xml.contains("G001"));
+        assertTrue(xml.contains("Gift Card"));
+        assertTrue(xml.contains("price=\"10000\""));
+    }
+
+    // NEW TEST 3: Gift card filtering
+
+    @Test
+    void giftCardCanBeFilteredByPrice() {
+        Catalog catalog = createCatalogWithGiftCard();
+
+        ProductFilterVisitor affordable =
+                new ProductFilterVisitor(
+                        new BigDecimal("10000")
+                );
+
+        ProductFilterVisitor tooCheap =
+                new ProductFilterVisitor(
+                        new BigDecimal("5000")
+                );
+
+        assertEquals(1, catalog.accept(affordable).size());
+        assertEquals(0, catalog.accept(tooCheap).size());
     }
 }
